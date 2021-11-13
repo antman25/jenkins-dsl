@@ -3,7 +3,7 @@
 node()
 {
     print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
-    def source_branch = env.getOrDefault("gitlabSourceBranch", "main")
+    def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
     stage('Git Clone')
     {
         checkout([$class: 'GitSCM',
