@@ -59,6 +59,10 @@ node()
         sh ('env | sort -n')
         updateGitlabCommitStatus name: 'test', state: 'success'
     }
+    stage('test_branch4')
+    {
+        echo "from 4"
+    }
 
 
 }
