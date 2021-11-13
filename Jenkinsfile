@@ -10,14 +10,22 @@ node()
                     userRemoteConfigs:
                     [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
     }*/
+
+    def root_path = "/build-root-gitlab"
     stage('Create Branches')
     {
         def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git')
         print("Branches: ${branches}")
-        branches.each {branch_name ->
+
+        jobDsl scriptText: "folder('FolderA')"
+        jobDsl scriptText: "folder('FolderA/SubA')"
+        jobDsl scriptText: "folder('FolderB')"
+        jobDsl scriptText: "folder('FolderC')"
+
+       /*branches.each {branch_name ->
             print("Creating Branch Folder")
             jobDsl scriptText: "folder('${branch_name}')"
-        }
+        }*/
 
     }
 
