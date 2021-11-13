@@ -1,4 +1,4 @@
-def build_root = '/build-root-multibranch'
+def build_root = '/build-root-gitlab'
 folder("${build_root}/${BUILD_BRANCH}/packer")
 
 folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos")

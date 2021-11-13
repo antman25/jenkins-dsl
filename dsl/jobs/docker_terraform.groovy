@@ -1,4 +1,4 @@
-def build_root = '/build-root-multibranch'
+def build_root = '/build-root-gitlab'
 folder("${build_root}/${BUILD_BRANCH}/docker/terraform")
 
 pipelineJob("${build_root}/${BUILD_BRANCH}/docker/terraform/build") {
