@@ -1,0 +1,34 @@
+node()
+{
+    def gitlab_trigger_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+	stage('gitlab clone')
+	{
+		checkout scm
+	}
+	stage('Dump ENV')
+	{
+		sh('env | sort -n')
+		print("Gitlab Trigger Branch: ${gitlab_trigger_branch}")
+	}
+
+    stage('Create Jobs')
+    {
+         jobDsl targets: ['jenkins-library/dsl/jobs/build_root.groovy',
+          'jenkins-library/dsl/jobs/docker_ansible.groovy',
+          'jenkins-library/dsl/jobs/docker_terraform.groovy',
+          'jenkins-library/dsl/jobs/docker_consul.groovy',
+          'jenkins-library/dsl/jobs/docker_vault.groovy',
+          'jenkins-library/dsl/jobs/docker_packer.groovy',
+          'jenkins-library/dsl/jobs/ubi8_hardened.groovy',
+          'jenkins-library/dsl/jobs/packer_goldenos.groovy'].join('\n'),
+         removedJobAction: 'DELETE',
+         removedViewAction: 'DELETE',
+         lookupStrategy: 'SEED_JOB',
+         additionalParameters: [BUILD_BRANCH: gitlab_trigger_branch]
+    }
+
+	stage('Run Build Jobs')
+	{
+		build job: '/build-root/build-master', parameters: [[$class: 'StringParameterValue', name: 'BUILD_BRANCH', value: gitlab_trigger_branch]]
+	}
+}

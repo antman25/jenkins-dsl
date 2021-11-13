@@ -1,0 +1,80 @@
+node("DOCKER")
+{
+    def build_branch = params.getOrDefault("BUILD_BRANCH","main")
+    def has_mods = false
+    def var_filepath = env.getEnvironment()["var_filepath"]
+
+    currentBuild.displayName = "Build ID: ${BUILD_NUMBER}"
+    currentBuild.description = "Branch: ${build_branch}"
+
+    ws("/mnt/scratch/appdata/jenkins-workspace")
+    {
+        stage("Git Checkout")
+        {
+            checkout([$class: 'GitSCM', branches: [[name: build_branch]], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/data_center.git']]])
+        }
+        def current_git_commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+
+        stage ("ENV dump")
+        {
+            sh('env | sort -n')
+            //print(env.getEnvironment())
+            print(params)
+        }
+
+        stage('Get Modified Files')
+        {
+            try
+            {
+                def prev_git_commit = readFile("${WORKSPACE}/PREV_GIT_COMMIT").trim()
+                echo "Last Successful commit hash: ${prev_git_commit}"
+                def modified_files = sh(returnStdout: true, script: "git diff --name-only ${prev_git_commit}").trim()
+                echo "Modified Files:\n${modified_files}"
+                has_mods = true
+            }
+            catch (Exception ex)
+            {
+                echo "Exception getting last commit"
+                has_mods = true
+            }
+        }
+        stage("Build Pipeline")
+        {
+            lock ('VSPHERE-SERVER')
+            {
+                stage("Stage01 - ISO")
+                {
+                    //                        -var http_ip=${build_node_ip} \
+                    withCredentials([string(credentialsId: 'vsphere-password', variable: 'vsphere_password')]) {
+                        sh '''docker run \
+                                --pull always \
+                                --network host \
+                                -e BUILD_BRANCH=${BUILD_BRANCH} \
+                                -e VSPHERE_PASSWORD=${vsphere_password} \
+                                -v ${WORKSPACE}/packer-library/centos:/packer \
+                                nexus.antlinux.local:8443/custom-base/hashicorp/packer:latest \
+                                build -color=false -timestamp-ui -on-error=cleanup -force \
+                                -var-file=vars/common_vm/default.json \
+                                -var-file=${var_filepath} \
+                                -only="stage01.vsphere-iso.centos_iso" /packer
+                        '''
+
+                    }
+                }
+            }
+        }
+
+        stage ("Save Commit SHA")
+        {
+            sh("echo ${current_git_commit} > PREV_GIT_COMMIT")
+        }
+    }
+
+
+	
+
+	/*properties([ 	disableConcurrentBuilds(),
+			gitLabConnection(gitLabConnection: 'gitlab1', jobCredentialId: ''),
+			parameters([string(defaultValue: 'main', name: 'BUILD_BRANCH')])
+			])*/
+}
