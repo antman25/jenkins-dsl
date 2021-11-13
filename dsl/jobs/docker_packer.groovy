@@ -1,6 +1,7 @@
-folder('build-root/docker/packer')
+def build_root = '/build-root-multibranch'
+folder("${build_root}/${BUILD_BRANCH}/docker/packer")
 
-pipelineJob('build-root/docker/packer/build') {
+pipelineJob("${build_root}/${BUILD_BRANCH}/docker/packer/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
 
@@ -11,8 +12,8 @@ pipelineJob('build-root/docker/packer/build') {
       scm {
         git {
           remote { url(repo) }
-          branches('main')
-          scriptPath('jenkins-library/docker/packer/Jenkinsfile')
+          branches("${BUILD_BRANCH}")
+          scriptPath('docker/packer/Jenkinsfile')
           extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
 

@@ -13,17 +13,14 @@ node()
 
     stage('Create Jobs')
     {
-        /*
-        ,
-                  'dsl/jobs/docker_ansible.groovy',
-                  'dsl/jobs/docker_terraform.groovy',
-                  'dsl/jobs/docker_consul.groovy',
-                  'dsl/jobs/docker_vault.groovy',
-                  'dsl/jobs/docker_packer.groovy',
-                  'dsl/jobs/ubi8_hardened.groovy',
-                  'dsl/jobs/packer_goldenos.groovy'
-        */
-         jobDsl targets: ['dsl/jobs/build_root.groovy'].join('\n'),
+         jobDsl targets: ['dsl/jobs/build_root.groovy',
+          'dsl/jobs/docker_ansible.groovy',
+          'dsl/jobs/docker_terraform.groovy',
+          'dsl/jobs/docker_consul.groovy',
+          'dsl/jobs/docker_vault.groovy',
+          'dsl/jobs/docker_packer.groovy',
+          'dsl/jobs/ubi8_hardened.groovy',
+          'dsl/jobs/packer_goldenos.groovy'].join('\n'),
          removedJobAction: 'DELETE',
          removedViewAction: 'DELETE',
          lookupStrategy: 'SEED_JOB',

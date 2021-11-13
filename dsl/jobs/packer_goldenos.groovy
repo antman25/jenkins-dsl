@@ -1,8 +1,11 @@
-folder('build-root/packer/golden-baseos')
-folder('build-root/packer/golden-baseos/winsvr2019')
-folder('build-root/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021')
+def build_root = '/build-root-multibranch'
+folder("${build_root}/${BUILD_BRANCH}/packer/")
 
-pipelineJob('build-root/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021/build') {
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos")
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/winsvr2019")
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021")
+
+pipelineJob("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
 
@@ -32,8 +35,8 @@ pipelineJob('build-root/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021/build
       scm {
         git {
           remote { url(repo) }
-          branches('main')
-          scriptPath('jenkins-library/packer/winsvr/Jenkinsfile')
+          branches("${BUILD_BRANCH}")
+          scriptPath('packer/winsvr/Jenkinsfile')
           extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
 
@@ -43,10 +46,11 @@ pipelineJob('build-root/packer/golden-baseos/winsvr2019/winsvr2019-JAN2021/build
 }
 
 
-folder('build-root/packer/golden-baseos/centos7')
-folder('build-root/packer/golden-baseos/centos7/CentOS-7.9.2009')
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos7")
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos7/CentOS-7.9.2009")
 
-pipelineJob('build-root/packer/golden-baseos/centos7/CentOS-7.9.2009/build') {
+
+pipelineJob("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos7/CentOS-7.9.2009/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
 
@@ -83,7 +87,7 @@ pipelineJob('build-root/packer/golden-baseos/centos7/CentOS-7.9.2009/build') {
         git {
           remote { url(repo) }
           branches('main')
-          scriptPath('jenkins-library/packer/centos/Jenkinsfile')
+          scriptPath('packer/centos/Jenkinsfile')
           extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
 
@@ -92,10 +96,10 @@ pipelineJob('build-root/packer/golden-baseos/centos7/CentOS-7.9.2009/build') {
   }
 }
 
-folder('build-root/packer/golden-baseos/centos8')
-folder('build-root/packer/golden-baseos/centos8/CentOS-8.2.2004')
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos8")
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos8/CentOS-8.2.2004")
 
-pipelineJob('build-root/packer/golden-baseos/centos8/CentOS-8.2.2004/build') {
+pipelineJob("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos8/CentOS-8.2.2004/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
   triggers {
@@ -132,7 +136,7 @@ pipelineJob('build-root/packer/golden-baseos/centos8/CentOS-8.2.2004/build') {
         git {
           remote { url(repo) }
           branches('main')
-          scriptPath('jenkins-library/packer/centos/Jenkinsfile')
+          scriptPath('packer/centos/Jenkinsfile')
           extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
 
@@ -141,9 +145,9 @@ pipelineJob('build-root/packer/golden-baseos/centos8/CentOS-8.2.2004/build') {
   }
 }
 
-folder('build-root/packer/golden-baseos/centos8/CentOS-8.4.2105')
+folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos8/CentOS-8.4.2105")
 
-pipelineJob('build-root/packer/golden-baseos/centos8/CentOS-8.4.2105/build') {
+pipelineJob("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/centos8/CentOS-8.4.2105/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
 
@@ -180,7 +184,7 @@ pipelineJob('build-root/packer/golden-baseos/centos8/CentOS-8.4.2105/build') {
         git {
           remote { url(repo) }
           branches('main')
-          scriptPath('jenkins-library/packer/centos/Jenkinsfile')
+          scriptPath('packer/centos/Jenkinsfile')
           extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
 
