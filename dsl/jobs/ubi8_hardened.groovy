@@ -1,6 +1,8 @@
-folder('build-root/docker/ubi8')
+def build_root = '/build-root-multibranch'
+folder("${build_root}/${BUILD_BRANCH}/docker/ubi8")
 
-pipelineJob('build-root/docker/ubi8/build') {
+
+pipelineJob("${build_root}/${BUILD_BRANCH}/docker/ubi8/build") {
 
   def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
 
