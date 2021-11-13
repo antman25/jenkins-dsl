@@ -8,7 +8,7 @@ node()
 	stage('Dump ENV')
 	{
 		sh('env | sort -n')
-		print("Gitlab Trigger Branch: ${BUILD_BRANCH}")
+		print("Gitlab Trigger Branch: ${BRANCH_NAME}")
 	}
 
     stage('Create Jobs')
@@ -24,6 +24,6 @@ node()
          removedJobAction: 'DELETE',
          removedViewAction: 'DELETE',
          lookupStrategy: 'SEED_JOB',
-         additionalParameters: [BUILD_BRANCH: "${BUILD_BRANCH}"]
+         additionalParameters: [BUILD_BRANCH: "${BRANCH_NAME}"]
     }
 }
