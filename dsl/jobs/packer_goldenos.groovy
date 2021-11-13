@@ -1,5 +1,5 @@
 def build_root = '/build-root-multibranch'
-folder("${build_root}/${BUILD_BRANCH}/packer/")
+folder("${build_root}/${BUILD_BRANCH}/packer")
 
 folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos")
 folder("${build_root}/${BUILD_BRANCH}/packer/golden-baseos/winsvr2019")
