@@ -12,7 +12,7 @@ node()
     }*/
     stage('Get Branches')
     {
-        def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local/antman/jenkins-dsl.git')
+        def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git')
         print("Branches: ${branches}")
     }
 
