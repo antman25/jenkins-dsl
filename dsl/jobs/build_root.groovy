@@ -1,8 +1,9 @@
 def build_root = 'build-root-multibranch'
 folder(build_root)
+
 folder("${build_root}/${BUILD_BRANCH}")
 
-folder("${build_root}/${BUILD_BRANCH}/docker")
+/*folder("${build_root}/${BUILD_BRANCH}/docker")
 folder('${build_root}/${BUILD_BRANCH}/packer')
 
 pipelineJob("${build_root}/${BUILD_BRANCH}/build-master") {
@@ -26,4 +27,4 @@ pipelineJob("${build_root}/${BUILD_BRANCH}/build-master") {
       }
     }
   }
-}
+}*/
