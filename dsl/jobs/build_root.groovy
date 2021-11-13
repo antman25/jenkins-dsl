@@ -1,5 +1,5 @@
-def build_root = 'build-root-multibranch'
-folder(build_root)
+def build_root = '/build-root-multibranch'
+folder("${build_root}")
 
 folder("${build_root}/${BUILD_BRANCH}")
 
