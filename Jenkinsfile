@@ -3,6 +3,7 @@
 node()
 {
     print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
+    print("ENV = ${env.getEnvironment()}")
     def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
 
 
