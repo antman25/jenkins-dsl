@@ -17,10 +17,21 @@ node()
         def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git')
         print("Branches: ${branches}")
 
-        jobDsl scriptText: "folder('FolderA')"
-        jobDsl scriptText: "folder('FolderA/SubA')"
-        jobDsl scriptText: "folder('FolderB')"
-        jobDsl scriptText: "folder('FolderC')"
+        jobDsl scriptText: "folder('FolderA')",
+               removedJobAction: 'DELETE',
+               removedViewAction: 'DELETE',
+               lookupStrategy: 'SEED_JOB'
+
+        jobDsl scriptText: "folder('FolderA/SubA')",
+               removedJobAction: 'DELETE',
+               removedViewAction: 'DELETE',
+               lookupStrategy: 'SEED_JOB'
+
+        jobDsl scriptText: "folder('FolderB')",
+               removedJobAction: 'DELETE',
+               removedViewAction: 'DELETE',
+               lookupStrategy: 'SEED_JOB'
+
 
        /*branches.each {branch_name ->
             print("Creating Branch Folder")
