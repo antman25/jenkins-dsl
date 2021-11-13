@@ -1,9 +1,11 @@
 def build_root = '/build-root-gitlab'
-folder("${build_root}")
+//folder("${build_root}")
+//print("Building Folder ${build_root}/${BUILD_BRANCH}")
+//folder("${build_root}/${BUILD_BRANCH}")
 
-folder("${build_root}/${BUILD_BRANCH}")
-
+print("Building Folder ${build_root}/${BUILD_BRANCH}/docker")
 folder("${build_root}/${BUILD_BRANCH}/docker")
+print("Building Folder ${build_root}/${BUILD_BRANCH}/packer")
 folder("${build_root}/${BUILD_BRANCH}/packer")
 
 /*pipelineJob("${build_root}/${BUILD_BRANCH}/build-master") {
