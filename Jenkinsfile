@@ -24,11 +24,25 @@ node()
 
        branches.each {branch_name ->
             print("Creating Branch Folder")
-            jobDsl scriptText: "folder('${root_path}/${branch_name}')"
+            jobDsl scriptText: "folder('${root_path}/${branch_name}')",
+                   removedJobAction: 'DELETE',
+                   removedViewAction: 'DELETE',
+                   lookupStrategy: 'SEED_JOB'
         }
 
     }
 
+    stage ('Run Job DSL')
+    {
+        stage('Create Jobs')
+            {
+                 jobDsl targets: ['dsl/jobs/build_root.groovy'].join('\n'),
+                 removedJobAction: 'DELETE',
+                 removedViewAction: 'DELETE',
+                 lookupStrategy: 'SEED_JOB',
+                 additionalParameters: [BUILD_BRANCH: "${env.gitlabSourceBranch}"]
+            }
+    }
 
 
     stage('ENV DUmp')
