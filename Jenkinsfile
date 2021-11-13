@@ -7,7 +7,7 @@ node()
     def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
 
 
-    /*stage('Git Clone')
+    stage('Git Clone')
     {
 
         checkout([$class: 'GitSCM',
@@ -16,7 +16,7 @@ node()
                             userRemoteConfigs:
                             [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
 
-    }*/
+    }
 
     def root_path = "/build-root-gitlab"
     stage('Create Build Root')
