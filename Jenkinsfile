@@ -18,7 +18,7 @@ node()
 
     }
 
-    def root_path = "/build-root-gitlab"
+    def root_path = "/build-root-multibranch"
     stage('Create Build Root')
     {
         def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git')
@@ -47,7 +47,7 @@ node()
                  removedJobAction: 'DELETE',
                  removedViewAction: 'DELETE',
                  lookupStrategy: 'SEED_JOB',
-                 additionalParameters: [BUILD_BRANCH: "${env.gitlabSourceBranch}"]
+                 additionalParameters: [BUILD_BRANCH: "${source_branch}"]
             }
     }
 
@@ -61,13 +61,7 @@ node()
     stage('test')
     {
         updateGitlabCommitStatus name: 'test', state: 'pending'
-        sh ('env | sort -n')
+        echo "test"
         updateGitlabCommitStatus name: 'test', state: 'success'
     }
-    stage('test_branch4')
-    {
-        echo "from 4"
-    }
-
-
 }
