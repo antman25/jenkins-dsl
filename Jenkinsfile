@@ -2,23 +2,21 @@
 
 node()
 {
-    print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
+    //print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
     print("ENV = ${env.getEnvironment()}")
-    def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+    def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
 
 
-    stage('Git Clone')
+    /*stage('Git Clone')
     {
-        dir (source_branch)
-        {
-            checkout([$class: 'GitSCM',
-                                branches: [[name: source_branch]],
-                                extensions: [],
-                                userRemoteConfigs:
-                                [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
-        }
 
-    }
+        checkout([$class: 'GitSCM',
+                            branches: [[name: source_branch]],
+                            extensions: [],
+                            userRemoteConfigs:
+                            [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
+
+    }*/
 
     def root_path = "/build-root-gitlab"
     stage('Create Build Root')
@@ -45,7 +43,7 @@ node()
     {
         stage('Create Jobs')
             {
-                 jobDsl targets: ['dsl/jobs/build_root.groovy'].join('\n'),
+                 jobDsl targets: ["dsl/jobs/build_root.groovy"].join('\n'),
                  removedJobAction: 'DELETE',
                  removedViewAction: 'DELETE',
                  lookupStrategy: 'SEED_JOB',
