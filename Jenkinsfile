@@ -3,13 +3,17 @@
 node()
 {
     //print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
-    print("ENV = ${env.getEnvironment()}")
+    //print("ENV = ${env.getEnvironment()}")
     def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
-
+    //def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+    stage ("ENV Dump")
+    {
+        sh ("env | sort -n")
+    }
 
     stage('Git Clone')
     {
-
+        dir
         checkout([$class: 'GitSCM',
                             branches: [[name: source_branch]],
                             extensions: [],
@@ -18,26 +22,14 @@ node()
 
     }
 
-    def root_path = "/build-root-multibranch"
+    /*def root_path = "/build-root-gitlab"
     stage('Create Build Root')
     {
-        def branches = git_helper.getRemoteBranches('http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git')
-        print("Branches: ${branches}")
-
         jobDsl scriptText: "folder('${root_path}')",
                removedJobAction: 'DELETE',
                removedViewAction: 'DELETE',
                lookupStrategy: 'SEED_JOB'
-
-       branches.each {branch_name ->
-            print("Creating Branch Folder")
-            jobDsl scriptText: "folder('${root_path}/${branch_name}')",
-                   removedJobAction: 'DELETE',
-                   removedViewAction: 'DELETE',
-                   lookupStrategy: 'SEED_JOB'
-        }
-
-    }
+    }*/
 
     stage ('Run Job DSL')
     {
@@ -49,19 +41,5 @@ node()
                  lookupStrategy: 'SEED_JOB',
                  additionalParameters: [BUILD_BRANCH: "${source_branch}"]
             }
-    }
-
-
-    stage('ENV DUmp')
-    {
-        updateGitlabCommitStatus name: 'build', state: 'pending'
-        sh ('env | sort -n')
-        updateGitlabCommitStatus name: 'build', state: 'success'
-    }
-    stage('test')
-    {
-        updateGitlabCommitStatus name: 'test', state: 'pending'
-        echo "test"
-        updateGitlabCommitStatus name: 'test', state: 'success'
     }
 }
