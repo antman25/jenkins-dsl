@@ -13,7 +13,6 @@ node()
 
     stage('Git Clone')
     {
-        dir
         checkout([$class: 'GitSCM',
                             branches: [[name: source_branch]],
                             extensions: [],
