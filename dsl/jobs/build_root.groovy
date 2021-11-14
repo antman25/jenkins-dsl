@@ -1,53 +1,32 @@
-organizationFolder('/GitLab Organization Folder') {
-    description("GitLab org folder created with Job DSL")
-    displayName('My Project')
-    // "Projects"
-    organizations {
-        gitLabSCMNavigator {
-            projectOwner("antman")
-            credentialsId("antman-gitlab")
-            serverName("gitlab.antlinux.local")
-            // "Traits" ("Behaviours" in the GUI) that are "declarative-compatible"
-            traits {
-                subGroupProjectDiscoveryTrait() // discover projects inside subgroups
-                gitLabBranchDiscovery {
-                    strategyId(3) // discover all branches
-                }
-                originMergeRequestDiscoveryTrait {
-                    strategyId(1) // discover MRs and merge them with target branch
-                }
-                gitLabTagDiscovery() // discover tags
-            }
+def build_root = '/build-root-gitlab'
+folder("${build_root}")
+//print("Building Folder ${build_root}/${BUILD_BRANCH}")
+folder("${build_root}/${BUILD_BRANCH}")
+
+print("Building Folder ${build_root}/${BUILD_BRANCH}/docker")
+folder("${build_root}/${BUILD_BRANCH}/docker")
+print("Building Folder ${build_root}/${BUILD_BRANCH}/packer")
+folder("${build_root}/${BUILD_BRANCH}/packer")
+
+/*pipelineJob("${build_root}/${BUILD_BRANCH}/build-master") {
+
+  def repo = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
+
+  description("Pipeline for $repo")
+  parameters {
+    stringParam('BUILD_BRANCH', 'main', 'build this branch')
+  }
+  definition {
+    cpsScm {
+      scm {
+        git {
+          remote { url(repo) }
+          branches('main')
+          scriptPath('build-master/Jenkinsfile')
+          extensions { }  // required as otherwise it may try to tag the repo, which you may not want
         }
+
+      }
     }
-    // "Traits" ("Behaviours" in the GUI) that are NOT "declarative-compatible"
-    // For some 'traits, we need to configure this stuff by hand until JobDSL handles it
-    // https://issues.jenkins.io/browse/JENKINS-45504
-    configure {
-        def traits = it / navigators / 'io.jenkins.plugins.gitlabbranchsource.GitLabSCMNavigator' / traits
-        traits << 'io.jenkins.plugins.gitlabbranchsource.ForkMergeRequestDiscoveryTrait' {
-            strategyId(2)
-            trust(class: 'io.jenkins.plugins.gitlabbranchsource.ForkMergeRequestDiscoveryTrait$TrustPermission')
-        }
-    }
-    // "Project Recognizers"
-    projectFactories {
-        workflowMultiBranchProjectFactory {
-            scriptPath 'Jenkinsfile'
-        }
-    }
-    // "Orphaned Item Strategy"
-    orphanedItemStrategy {
-        discardOldItems {
-            daysToKeep(10)
-            numToKeep(5)
-        }
-    }
-    // "Scan Organization Folder Triggers" : 1 day
-    // We need to configure this stuff by hand because JobDSL only allow 'periodic(int min)' for now
-    triggers {
-        periodicFolderTrigger {
-            interval('1d')
-        }
-    }
-}
+  }
+}*/
