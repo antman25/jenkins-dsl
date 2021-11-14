@@ -1,4 +1,4 @@
-organizationFolder('GitLab Organization Folder') {
+organizationFolder('/GitLab Organization Folder') {
     description("GitLab org folder created with Job DSL")
     displayName('My Project')
     // "Projects"
