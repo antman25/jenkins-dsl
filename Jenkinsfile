@@ -17,7 +17,7 @@ node("DOCKER")
         def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
         def local_head = git_helper.getLocalHEAD()
         def test = git_helper.testFunc()
-        def active_branches = git_helper.getRemoteBranches()
+        def active_branches = git_helper.testFunc2()
         def job_root = "/build-root-mymultibranch"
 
 
