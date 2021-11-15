@@ -13,7 +13,7 @@ node()
                 branches: [[name: 'main']],
                 extensions: [],
                 userRemoteConfigs:
-                [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
+                [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
         }
 
         def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
