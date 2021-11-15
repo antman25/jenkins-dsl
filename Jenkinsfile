@@ -27,7 +27,8 @@ node("DOCKER")
         stage ("ENV Dump")
         {
             sh ("env | sort -n")
-            print("Active Branches: ${active_branches}")
+            //print("Active Branches: ${active_branches}")
+            print("local head: {local_head}")
         }
 
         /*
