@@ -10,7 +10,7 @@ node()
         def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
         def cred_id = 'jenkins_ssh'
         def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
-        def active_branches = git_helper.getRemoteBranches()
+        //def active_branches = git_helper.getRemoteBranches()
         def job_root = "/build-root-mymultibranch"
 
 
