@@ -5,60 +5,60 @@ node()
     //print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
     //print("ENV = ${env.getEnvironment()}")
     //def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
-
-    def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
-    def cred_id = 'jenkins_ssh'
-    def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
-    def active_branches = git_helper.getRemoteBranches()
-    def job_root = "/build-root-mymultibranch"
-
-
-    stage ("ENV Dump")
+    ws('/mnt/scratch/appdata/jenkins_workspace')
     {
-        sh ("env | sort -n")
-        print("Active Branches: ${active_branches}")
-    }
+        def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
+        def cred_id = 'jenkins_ssh'
+        def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+        def active_branches = git_helper.getRemoteBranches()
+        def job_root = "/build-root-mymultibranch"
 
-    stage('CLone jenkins-dsl')
-    {
-        checkout([$class: 'GitSCM',
-            branches: [[name: 'main']],
-            extensions: [],
-            userRemoteConfigs:
-            [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
-    }
 
-    stage('Git Clone')
-    {
-        jobDsl scriptText: "folder('${job_root}')",
-               removedJobAction: 'DELETE',
-               removedViewAction: 'DELETE',
-               lookupStrategy: 'SEED_JOB'
+        stage ("ENV Dump")
+        {
+            sh ("env | sort -n")
+            print("Active Branches: ${active_branches}")
+        }
 
-        active_branches.each { cur_branch ->
-            jobDsl scriptText: "folder('${job_root}/${cur_branch}')",
+        stage('CLone jenkins-dsl')
+        {
+            checkout([$class: 'GitSCM',
+                branches: [[name: 'main']],
+                extensions: [],
+                userRemoteConfigs:
+                [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
+        }
+
+        stage('Git Clone')
+        {
+            jobDsl scriptText: "folder('${job_root}')",
                    removedJobAction: 'DELETE',
                    removedViewAction: 'DELETE',
                    lookupStrategy: 'SEED_JOB'
-            dir (cur_branch)
-            {
-                checkout([$class: 'GitSCM',
-                            branches: [[name: cur_branch]],
-                            extensions: [],
-                            userRemoteConfigs:
-                            [[credentialsId: cred_id, url: repo_url]]])
+
+            active_branches.each { cur_branch ->
+                jobDsl scriptText: "folder('${job_root}/${cur_branch}')",
+                       removedJobAction: 'DELETE',
+                       removedViewAction: 'DELETE',
+                       lookupStrategy: 'SEED_JOB'
+                dir (cur_branch)
+                {
+                    checkout([$class: 'GitSCM',
+                                branches: [[name: cur_branch]],
+                                extensions: [],
+                                userRemoteConfigs:
+                                [[credentialsId: cred_id, url: repo_url]]])
+                }
             }
         }
+
+        /*def root_path = "/build-root-gitlab"
+        stage('Create Build Root')
+        {
+            jobDsl scriptText: "folder('${root_path}')",
+                   removedJobAction: 'DELETE',
+                   removedViewAction: 'DELETE',
+                   lookupStrategy: 'SEED_JOB'
+        }*/
     }
-
-    /*def root_path = "/build-root-gitlab"
-    stage('Create Build Root')
-    {
-        jobDsl scriptText: "folder('${root_path}')",
-               removedJobAction: 'DELETE',
-               removedViewAction: 'DELETE',
-               lookupStrategy: 'SEED_JOB'
-    }*/
-
-
 }
