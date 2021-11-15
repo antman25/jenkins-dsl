@@ -1,6 +1,6 @@
-@Library('jenkins-shared-lib') _
+@Library('jenkins-shared-lib@main') _
 
-node()
+node("DOCKER")
 {
     //print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
     //print("ENV = ${env.getEnvironment()}")
@@ -19,7 +19,8 @@ node()
         def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
         def cred_id = 'jenkins_ssh'
         def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
-        def active_branches = git_helper.getRemoteBranches()
+        def local_head = git_helper.getLocalHEAD()
+        //def active_branches = git_helper.getRemoteBranches()
         def job_root = "/build-root-mymultibranch"
 
 
