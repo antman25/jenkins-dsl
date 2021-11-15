@@ -20,7 +20,7 @@ node()
             print("Active Branches: ${active_branches}")
         }
 
-        stage('CLone jenkins-dsl')
+        /*stage('CLone jenkins-dsl')
         {
             checkout([$class: 'GitSCM',
                 branches: [[name: 'main']],
@@ -50,15 +50,6 @@ node()
                                 [[credentialsId: cred_id, url: repo_url]]])
                 }
             }
-        }
-
-        /*def root_path = "/build-root-gitlab"
-        stage('Create Build Root')
-        {
-            jobDsl scriptText: "folder('${root_path}')",
-                   removedJobAction: 'DELETE',
-                   removedViewAction: 'DELETE',
-                   lookupStrategy: 'SEED_JOB'
         }*/
     }
 }
