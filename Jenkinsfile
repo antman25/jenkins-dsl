@@ -7,14 +7,10 @@ node("DOCKER")
     //def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
     //ws('/mnt/scratch/appdata/jenkins_workspace')
     //{
-        /*stage('CLone jenkins-dsl')
+        stage('CLone jenkins-dsl')
         {
-            checkout([$class: 'GitSCM',
-                branches: [[name: 'main']],
-                extensions: [],
-                userRemoteConfigs:
-                [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
-        }*/
+            checkout scm
+        }
 
         def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
         def cred_id = 'jenkins_ssh'
