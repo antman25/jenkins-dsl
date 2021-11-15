@@ -4,21 +4,42 @@ node()
 {
     //print("gitlabSourceBranch = ${env.gitlabSourceBranch}")
     //print("ENV = ${env.getEnvironment()}")
-    def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
-    //def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+    //def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
+
+    def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
+    def cred_id = 'jenkins_ssh'
+    def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
+    def active_branches = git_helper.getRemoteBranches()
+    def job_root = "/build-root-mymultibranch"
+
+
     stage ("ENV Dump")
     {
         sh ("env | sort -n")
+        print("Active Branches: ${active_branches}")
     }
 
     stage('Git Clone')
     {
-        checkout([$class: 'GitSCM',
-                            branches: [[name: source_branch]],
+        jobDsl scriptText: "folder('${job_root}')",
+               removedJobAction: 'DELETE',
+               removedViewAction: 'DELETE',
+               lookupStrategy: 'SEED_JOB'
+
+        active_branches.each { cur_branch ->
+            jobDsl scriptText: "folder('${job_root}/${cur_branch}')",
+                   removedJobAction: 'DELETE',
+                   removedViewAction: 'DELETE',
+                   lookupStrategy: 'SEED_JOB'
+            dir (cur_branch)
+            {
+                checkout([$class: 'GitSCM',
+                            branches: [[name: cur_branch]],
                             extensions: [],
                             userRemoteConfigs:
-                            [[credentialsId: 'jenkins_ssh', url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
-
+                            [[credentialsId: cred_id, url: repo_url]]])
+            }
+        }
     }
 
     /*def root_path = "/build-root-gitlab"
@@ -30,15 +51,5 @@ node()
                lookupStrategy: 'SEED_JOB'
     }*/
 
-    stage ('Run Job DSL')
-    {
-        stage('Create Jobs')
-            {
-                 jobDsl targets: ["dsl/jobs/build_root.groovy"].join('\n'),
-                 removedJobAction: 'DELETE',
-                 removedViewAction: 'DELETE',
-                 lookupStrategy: 'SEED_JOB',
-                 additionalParameters: [BUILD_BRANCH: "${source_branch}"]
-            }
-    }
+
 }
