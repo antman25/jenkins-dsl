@@ -19,6 +19,15 @@ node()
         print("Active Branches: ${active_branches}")
     }
 
+    stage('CLone jenkins-dsl')
+    {
+        checkout([$class: 'GitSCM',
+            branches: [[name: 'main']],
+            extensions: [],
+            userRemoteConfigs:
+            [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
+    }
+
     stage('Git Clone')
     {
         jobDsl scriptText: "folder('${job_root}')",
