@@ -7,6 +7,15 @@ node()
     //def source_branch = env.getEnvironment().getOrDefault("BRANCH_NAME", "main")
     ws('/mnt/scratch/appdata/jenkins_workspace')
     {
+        stage('CLone jenkins-dsl')
+        {
+            checkout([$class: 'GitSCM',
+                branches: [[name: 'main']],
+                extensions: [],
+                userRemoteConfigs:
+                [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
+        }
+
         def repo_url = 'http://gitlab.antlinux.local:30080/antman/data_center.git'
         def cred_id = 'jenkins_ssh'
         def source_branch = env.getEnvironment().getOrDefault("gitlabSourceBranch", "main")
@@ -17,17 +26,10 @@ node()
         stage ("ENV Dump")
         {
             sh ("env | sort -n")
-            print("Active Branches: ${active_branches}")
+            //print("Active Branches: ${active_branches}")
         }
 
-        /*stage('CLone jenkins-dsl')
-        {
-            checkout([$class: 'GitSCM',
-                branches: [[name: 'main']],
-                extensions: [],
-                userRemoteConfigs:
-                [[credentialsId: cred_id, url: 'http://gitlab.antlinux.local:30080/antman/jenkins-dsl.git']]])
-        }
+        /*
 
         stage('Git Clone')
         {
